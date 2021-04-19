@@ -38,8 +38,7 @@ class Advert(ColorizeMixin):
         # проверяем что это не вложенный словарь
         if not recur:
             if not hasattr(self, "title"):
-                print("Отсутствует поле title")
-                exit(1)
+                raise TypeError("Отсутствует поле title")
 
             if not hasattr(self, "price"):
                 setattr(self, "price", 0)
@@ -55,21 +54,17 @@ class Advert(ColorizeMixin):
 
 
 def test_1():
-    assert Advert({"title": "Iphone", "price": 100}) == 'Iphone | 100 ₽'
-
-
-def test_2():
     assert Advert({"title": "Iphone", "price": 100}).price == 100
 
 
-def test_3():
+def test_2():
     assert Advert({
         "title": "python",
         "price": -100,
         }).price == 0
 
 
-def test_4():
+def test_3():
     assert Advert({
         "title": "python",
         "price": 5,
@@ -77,8 +72,9 @@ def test_4():
         }).class_ == "dogs"
 
 
-def test_5():
-    assert Advert({}) == "SystemExit: 1"
+def test_4():
+    with pytest.raises(TypeError):
+        Advert({})
 
 
 if __name__ == '__main__':
